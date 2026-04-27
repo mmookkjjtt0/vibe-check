@@ -90,6 +90,36 @@
     for select using (auth.email() = 'mmookkjjtt0@gmail.com');
 
   ═══════════════════════════════════════════════════════
+  MIGRATION 4 — Public results page, drop admin (run once in SQL editor)
+  ═══════════════════════════════════════════════════════
+
+  -- 1. Drop admin scaffolding from MIGRATION 3 (safe if MIGRATION 3 was never run)
+  drop policy if exists admin_select_responses on public.responses;
+  drop policy if exists admin_select_answers   on public.answers;
+  drop policy if exists owner_select_responses on public.responses;
+  drop policy if exists owner_select_answers   on public.answers;
+  drop policy if exists "owner read responses" on public.responses;
+  drop policy if exists "owner read answers"   on public.answers;
+  drop function if exists public.is_admin();
+  drop table if exists public.admins;
+
+  -- 2. Public, PII-stripped view of responses.
+  --    Views run as their owner by default, bypassing RLS on the underlying
+  --    table — so the view is the security boundary. Email and respondent_id
+  --    are NOT in this view, so they cannot be selected via PostgREST.
+  create or replace view public.responses_public as
+    select id, respondent_name, relationship_type, additional_text, submitted_at
+    from public.responses;
+
+  grant select on public.responses_public to anon, authenticated;
+
+  -- 3. Allow anon to read answers (no PII columns on this table).
+  --    Inserts are still gated by the existing "insert answer" policy + FK check.
+  drop policy if exists public_read_answers on public.answers;
+  create policy public_read_answers on public.answers
+    for select to anon, authenticated using (true);
+
+  ═══════════════════════════════════════════════════════
   -->
 
   <style>
@@ -530,12 +560,9 @@
 
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const OWNER_EMAIL = 'mmookkjjtt0@gmail.com';
-
     // ── State ──────────────────────────────────────────
     const S = {
       lang: 'en',
-      user: null,            // only set for admin/owner after login
       respondentName: '',
       respondentEmail: '',
       rel: null,
@@ -557,14 +584,17 @@
         tagline:       'Rate Muhammad vibes',
         taglineSub:    'Answer 12 questions. Tell the truth.',
         getStarted:    'Get Started',
+        seeWhatPeopleSaid: 'See What People Said',
+        publicTitle:   'What people said',
+        publicEmpty:   'No one has weighed in yet. Be the first.',
+        publicCount:   (n) => `${n} ${n === 1 ? 'person has' : 'people have'} weighed in`,
+        feedbackLabel: 'Note',
         infoTitle:     "Who are you?",
         infoHint:      "Your name will show up on the results page",
         namePh:        'Your name',
         emailPh:       'your@email.com',
         infoCta:       "Let's go →",
         emailLabel:    'Email address',
-        passLabel:     'Password',
-        login:         'Log in',
         relTitle:      'From where do you know Muhammad?',
         relSocial:     'Social media only',
         relSocialSub:  'I follow him online — never met IRL',
@@ -584,7 +614,6 @@
         loading:       'Loading...',
         errGeneric:    'Something went wrong. Try again.',
         errEmail:      'Enter a valid email address.',
-        errPass:       'Password must be at least 6 characters.',
         errName:       'Enter your name.',
         back:          '← Back',
       },
@@ -594,14 +623,17 @@
         tagline:       'قيّم طاقة محمد',
         taglineSub:    '١٢ سؤال. كن صريحاً.',
         getStarted:    'ابدأ الآن',
+        seeWhatPeopleSaid: 'شوف وش قال الناس',
+        publicTitle:   'وش قال الناس',
+        publicEmpty:   'ما حدا قيّم لحد الحين. كن أول وحد.',
+        publicCount:   (n) => `${n} ${n === 1 ? 'شخص قيّم' : 'أشخاص قيّموا'}`,
+        feedbackLabel: 'ملاحظة',
         infoTitle:     'من أنت؟',
         infoHint:      'سيظهر اسمك في صفحة النتائج',
         namePh:        'اسمك',
         emailPh:       'بريدك@الإلكتروني',
         infoCta:       'يلّا نبدأ ←',
         emailLabel:    'البريد الإلكتروني',
-        passLabel:     'كلمة المرور',
-        login:         'تسجيل الدخول',
         relTitle:      'من أين تعرف محمد؟',
         relSocial:     'من السوشيال ميديا فقط',
         relSocialSub:  'أتابعهم أونلاين — ما قابلتهم شخصياً',
@@ -621,7 +653,6 @@
         loading:       'جاري التحميل...',
         errGeneric:    'حدث خطأ ما. حاول مجدداً.',
         errEmail:      'أدخل بريداً إلكترونياً صحيحاً.',
-        errPass:       'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.',
         errName:       'أدخل اسمك.',
         back:          '→ رجوع',
       },
@@ -634,7 +665,6 @@
 
     // ── Helpers ────────────────────────────────────────
     const sleep = ms => new Promise(r => setTimeout(r, ms));
-    const isOwner = () => !!(S.user && S.user.email === OWNER_EMAIL);
 
     function stripEmoji(str) {
       return str.replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, '').replace(/️/g, '').replace(/\s+/g, ' ').trim();
@@ -735,23 +765,6 @@
 
     function loadQuestions() {
       S.questions = QUESTIONS[S.rel];
-    }
-
-    // ── Admin login (owner only) ────────────────────────
-    async function doAdminLogin(email, password) {
-      S.loading = true; S.error = null; renderAdminFormState();
-      const { data, error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) { S.loading = false; S.error = error.message; renderAdminFormState(); return; }
-      S.user = data.user;
-      S.loading = false;
-      if (isOwner()) {
-        go(renderLanding);
-      } else {
-        await sb.auth.signOut();
-        S.user = null;
-        S.error = 'Access denied.';
-        renderAdminFormState();
-      }
     }
 
     async function submitResponse() {
@@ -866,16 +879,9 @@
           <p class="float-up float-up-2" style="margin:0;color:rgba(241,245,249,0.65);font-size:1rem;text-align:center;line-height:1.65;max-width:300px">${t('taglineSub')}</p>
 
           <div class="float-up float-up-3" style="width:100%;margin-top:48px;display:flex;flex-direction:column;gap:12px">
-            ${isOwner()
-              ? `<button class="btn-primary" data-action="results">📊 View Results</button>
-                 <button class="btn-ghost" data-action="gostart">${t('getStarted')}</button>`
-              : `<button class="btn-primary" data-action="gostart">${t('getStarted')}</button>`
-            }
+            <button class="btn-primary" data-action="gostart">${t('getStarted')}</button>
+            <button class="btn-ghost" data-action="public">${t('seeWhatPeopleSaid')}</button>
           </div>
-
-          ${!isOwner() ? `<div style="position:absolute;bottom:24px;left:0;right:0;text-align:center">
-            <button style="background:none;border:none;color:rgba(241,245,249,0.18);font-size:0.7rem;cursor:pointer;font-family:inherit;padding:8px 20px;transition:color 0.2s ease" onmouseenter="this.style.color='rgba(241,245,249,0.45)'" onmouseleave="this.style.color='rgba(241,245,249,0.18)'" data-action="goadmin">Admin</button>
-          </div>` : ''}
 
         </div>
       </div>`;
@@ -911,37 +917,6 @@
       </div>`;
     }
 
-    function renderAdminLogin() {
-      return `
-      <div class="screen-wrap" style="min-height:100dvh">
-        <div style="max-width:400px;width:100%;display:flex;flex-direction:column;gap:22px">
-
-          <button class="btn-ghost" data-action="back" style="width:auto;align-self:flex-start;padding:9px 16px;font-size:0.85rem">${t('back')}</button>
-
-          <div style="text-align:center">
-            <div class="brand" style="font-size:1.9rem;letter-spacing:-0.01em">
-              <span class="logo-grad">VibeCheck</span><span style="color:var(--cyan)">.</span>
-            </div>
-            <p style="margin:6px 0 0;font-size:0.72rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;font-family:'DM Mono',monospace">Admin Login</p>
-          </div>
-
-          <div class="card" style="padding:28px 24px;display:flex;flex-direction:column;gap:16px">
-            <div style="display:flex;flex-direction:column;gap:7px">
-              <label style="font-size:0.75rem;font-weight:600;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;font-family:'DM Mono',monospace">${t('emailLabel')}</label>
-              <input id="inp-email" class="input" type="email" placeholder="you@example.com" autocomplete="email" />
-            </div>
-            <div style="display:flex;flex-direction:column;gap:7px">
-              <label style="font-size:0.75rem;font-weight:600;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;font-family:'DM Mono',monospace">${t('passLabel')}</label>
-              <input id="inp-pass" class="input" type="password" placeholder="••••••••" autocomplete="current-password" />
-            </div>
-            <div id="auth-error" style="display:none" class="error-msg"></div>
-            <button id="auth-submit" class="btn-primary" data-action="submitadmin">${t('login')}</button>
-          </div>
-
-        </div>
-      </div>`;
-    }
-
     function renderRelationship() {
       return `
       <div class="screen-wrap" style="min-height:100dvh">
@@ -963,8 +938,6 @@
             <div style="font-weight:700;font-size:1.05rem;margin-bottom:5px;color:var(--text)">${t('relBoth')}</div>
             <div style="color:var(--text-mid);font-size:0.87rem;line-height:1.5">${t('relBothSub')}</div>
           </button>
-
-          ${isOwner() ? `<button class="btn-ghost" data-action="results" style="margin-top:8px;font-size:0.88rem;color:var(--text-dim)">📊 View Results →</button>` : ''}
 
         </div>
       </div>`;
@@ -1062,7 +1035,7 @@
           <p class="float-up float-up-2" style="color:var(--text-mid);font-size:0.97rem;margin:0;line-height:1.68;max-width:340px">${t('doneMsg')}</p>
 
           <div class="float-up float-up-3" style="width:100%;margin-top:8px;display:flex;flex-direction:column;gap:10px">
-            ${isOwner() ? `<button class="btn-primary" data-action="results">📊 View Results</button>` : ''}
+            <button class="btn-primary" data-action="public">${t('seeWhatPeopleSaid')}</button>
             <button class="btn-ghost" data-action="restart">${t('doneAgain')}</button>
           </div>
 
@@ -1089,16 +1062,29 @@
       return `Option ${choiceIndex + 1}`;
     }
 
+    function getInitial(name) {
+      const trimmed = (name || '').trim();
+      if (!trimmed) return '?';
+      const ch = trimmed[0];
+      return ch.toUpperCase ? ch.toUpperCase() : ch;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+
     function renderResponseCard(resp) {
-      const date = new Date(resp.submitted_at).toLocaleDateString('en-US', {
-        year: 'numeric', month: 'short', day: 'numeric',
-      });
+      const date = new Date(resp.submitted_at).toLocaleDateString(
+        S.lang === 'ar' ? 'ar' : 'en-US',
+        { year: 'numeric', month: 'short', day: 'numeric' }
+      );
       const relLabel = resp.relationship_type === 'both' ? t('relBoth') : t('relSocial');
-      const respondentLine = resp.respondent_name
-        ? `<div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:2px">${resp.respondent_name}${resp.respondent_email ? ` <span style="font-weight:400;color:var(--text-dim);font-size:0.82rem">&lt;${resp.respondent_email}&gt;</span>` : ''}</div>`
-        : '';
+      const name = resp.respondent_name || '—';
 
       const qas = (resp.answers || [])
+        .slice()
         .sort((a, b) => a.question_id.localeCompare(b.question_id))
         .map(a => {
           const qText = getQuestionText(a.question_id);
@@ -1107,24 +1093,28 @@
             : getChoiceText(a.question_id, a.choice_index);
           return `
           <div style="padding:12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:3px">
-            <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.4">${qText}</div>
-            <div style="font-size:0.95rem;font-weight:600;color:var(--text)">${aText}</div>
+            <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.4">${escapeHtml(qText)}</div>
+            <div style="font-size:0.95rem;font-weight:600;color:var(--text)">${escapeHtml(aText)}</div>
           </div>`;
         }).join('');
 
       const feedback = resp.additional_text ? `
         <div style="margin-top:16px;padding:14px 16px;background:rgba(129,140,248,0.06);border-radius:12px;border:1px solid rgba(129,140,248,0.14)">
-          <div style="font-size:0.7rem;font-weight:600;color:var(--primary);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px">Feedback</div>
-          <div style="font-size:0.9rem;color:var(--text-mid);line-height:1.62">${resp.additional_text}</div>
+          <div style="font-size:0.7rem;font-weight:600;color:var(--primary);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px">${t('feedbackLabel')}</div>
+          <div style="font-size:0.9rem;color:var(--text-mid);line-height:1.62;white-space:pre-wrap">${escapeHtml(resp.additional_text)}</div>
         </div>` : '';
 
       return `
       <div class="card" style="padding:22px 24px">
-        <div style="margin-bottom:14px">
-          ${respondentLine}
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-            <span style="font-size:0.72rem;font-weight:600;color:var(--primary);letter-spacing:0.06em;text-transform:uppercase">${relLabel}</span>
-            <span style="font-size:0.78rem;color:var(--text-dim);white-space:nowrap">${date}</span>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary-deep),var(--primary) 60%,var(--cyan));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.05rem;letter-spacing:-0.01em;box-shadow:0 6px 18px var(--primary-glow)">${escapeHtml(getInitial(name))}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:0.98rem;font-weight:700;color:var(--text);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(name)}</div>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:2px">
+              <span style="font-size:0.7rem;font-weight:600;color:var(--primary);letter-spacing:0.06em;text-transform:uppercase">${escapeHtml(relLabel)}</span>
+              <span style="width:3px;height:3px;background:var(--text-dim);border-radius:50%"></span>
+              <span style="font-size:0.76rem;color:var(--text-dim);white-space:nowrap">${date}</span>
+            </div>
           </div>
         </div>
         ${qas}
@@ -1132,18 +1122,18 @@
       </div>`;
     }
 
-    function renderResults() {
-      setTimeout(loadResultsData, 0);
+    function renderPublic() {
+      setTimeout(loadPublicData, 0);
       return `
       <div class="screen-wrap" style="min-height:100dvh;padding-top:40px;padding-bottom:40px;justify-content:flex-start">
         <div style="max-width:640px;width:100%;display:flex;flex-direction:column;gap:20px">
 
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:4px">
-            <button class="btn-ghost" data-action="back-results" style="width:auto;padding:9px 16px;font-size:0.85rem">← Back</button>
-            <h1 class="display" style="font-size:1.6rem;font-weight:700;margin:0;letter-spacing:-0.02em">Results</h1>
+            <button class="btn-ghost" data-action="back-results" style="width:auto;padding:9px 16px;font-size:0.85rem">${t('back')}</button>
+            <h1 class="display" style="font-size:1.6rem;font-weight:700;margin:0;letter-spacing:-0.02em">${t('publicTitle')}</h1>
           </div>
 
-          <div id="results-content">
+          <div id="public-content">
             <div style="text-align:center;padding:80px 0">
               <div class="spinner" style="width:28px;height:28px;display:inline-block;border-width:2.5px"></div>
             </div>
@@ -1153,17 +1143,18 @@
       </div>`;
     }
 
-    async function loadResultsData() {
-      const el = document.getElementById('results-content');
+    async function loadPublicData() {
+      const el = document.getElementById('public-content');
       if (!el) return;
 
-      const { data: responses, error } = await sb
-        .from('responses')
-        .select('id, respondent_name, respondent_email, relationship_type, additional_text, submitted_at, answers(question_id, choice_index, custom_answer)')
+      // 1. Fetch the PII-stripped responses view (no email, no respondent_id)
+      const { data: responses, error: re } = await sb
+        .from('responses_public')
+        .select('id, respondent_name, relationship_type, additional_text, submitted_at')
         .order('submitted_at', { ascending: false });
 
-      if (error) {
-        el.innerHTML = `<div class="error-msg">${error.message}</div>`;
+      if (re) {
+        el.innerHTML = `<div class="error-msg">${escapeHtml(re.message)}</div>`;
         return;
       }
 
@@ -1171,33 +1162,34 @@
         el.innerHTML = `
           <div style="text-align:center;padding:80px 0;color:var(--text-dim)">
             <div style="font-size:2rem;margin-bottom:14px">📭</div>
-            <div style="font-size:1rem;font-weight:500">No submissions yet.</div>
-            <div style="font-size:0.85rem;margin-top:6px;opacity:0.7">Make sure you ran the RLS migration in Supabase.</div>
+            <div style="font-size:1rem;font-weight:500">${t('publicEmpty')}</div>
           </div>`;
         return;
       }
 
-      const total = responses.length;
-      el.innerHTML = `
-        <div style="font-size:0.85rem;color:var(--text-dim);margin-bottom:4px">${total} submission${total !== 1 ? 's' : ''}</div>
-        ${responses.map(r => renderResponseCard(r)).join('')}`;
-    }
+      // 2. Fetch answers for those response ids and merge client-side
+      //    (separate query because PostgREST FK joins don't traverse a view)
+      const ids = responses.map(r => r.id);
+      const { data: answers, error: ae } = await sb
+        .from('answers')
+        .select('response_id, question_id, choice_index, custom_answer')
+        .in('response_id', ids);
 
-    function renderAdminFormState() {
-      const btn = document.getElementById('auth-submit');
-      const errEl = document.getElementById('auth-error');
-      if (!btn) return;
-      if (S.loading) {
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner"></span>`;
-      } else {
-        btn.disabled = false;
-        btn.textContent = t('login');
+      if (ae) {
+        el.innerHTML = `<div class="error-msg">${escapeHtml(ae.message)}</div>`;
+        return;
       }
-      if (errEl) {
-        if (S.error) { errEl.style.display = 'block'; errEl.textContent = S.error; }
-        else { errEl.style.display = 'none'; }
+
+      const byResponse = new Map();
+      for (const a of (answers || [])) {
+        if (!byResponse.has(a.response_id)) byResponse.set(a.response_id, []);
+        byResponse.get(a.response_id).push(a);
       }
+      for (const r of responses) r.answers = byResponse.get(r.id) || [];
+
+      el.innerHTML = `
+        <div style="font-size:0.85rem;color:var(--text-dim);margin-bottom:4px">${t('publicCount', responses.length)}</div>
+        ${responses.map(r => renderResponseCard(r)).join('')}`;
     }
 
     // ── Event binding ──────────────────────────────────
@@ -1230,12 +1222,9 @@
       });
       bindChoices();
 
-      const passInp  = document.getElementById('inp-pass');
       const nameInp  = document.getElementById('inp-name');
       const emailInp = document.getElementById('inp-email');
 
-      // Admin login: Enter on password submits
-      if (passInp) passInp.addEventListener('keydown', e => { if (e.key === 'Enter') doAdminAuthSubmit(); });
       // Respondent info: Enter on name moves to email, Enter on email submits
       if (nameInp)  nameInp.addEventListener('keydown',  e => { if (e.key === 'Enter') document.getElementById('inp-email')?.focus(); });
       if (emailInp && nameInp) emailInp.addEventListener('keydown', e => { if (e.key === 'Enter') doRespondentInfoSubmit(); });
@@ -1259,17 +1248,12 @@
           go(renderLanding, -1);
           break;
         }
-        case 'goadmin': {
-          S.error = null;
-          go(renderAdminLogin);
-          break;
-        }
         case 'submitinfo': {
           doRespondentInfoSubmit();
           break;
         }
-        case 'submitadmin': {
-          doAdminAuthSubmit();
+        case 'public': {
+          go(renderPublic);
           break;
         }
         case 'selectrel': {
@@ -1319,10 +1303,6 @@
           go(renderRespondentInfo);
           break;
         }
-        case 'results': {
-          if (isOwner()) go(renderResults);
-          break;
-        }
         case 'back-results': {
           go(renderLanding, -1);
           break;
@@ -1350,53 +1330,14 @@
       go(renderRelationship);
     }
 
-    function doAdminAuthSubmit() {
-      const email = document.getElementById('inp-email')?.value?.trim() || '';
-      const pass  = document.getElementById('inp-pass')?.value || '';
-
-      if (!email.includes('@')) { S.error = t('errEmail'); renderAdminFormState(); return; }
-      if (pass.length < 6)       { S.error = t('errPass');  renderAdminFormState(); return; }
-
-      doAdminLogin(email, pass);
-    }
-
     // ══════════════════════════════════════════════════
     // INIT
     // ══════════════════════════════════════════════════
 
-    let initDone = false;
-    sb.auth.onAuthStateChange(async (event, session) => {
-      // Only fires for mid-session events (e.g. admin logs in via doAdminLogin).
-      // initDone guard prevents a race with init()'s own session check.
-      if (event === 'SIGNED_IN' && session && initDone && !S.user) {
-        S.user = session.user;
-        if (isOwner()) go(renderLanding);
-        else { await sb.auth.signOut(); S.user = null; }
-      }
-    });
-
-    async function init() {
-      document.getElementById('app').innerHTML = `
-        <div style="min-height:100dvh;display:flex;align-items:center;justify-content:center">
-          <div style="text-align:center">
-            <div class="spinner" style="width:26px;height:26px;display:inline-block;border-width:2.5px"></div>
-          </div>
-        </div>`;
-
+    function init() {
       const savedLang = localStorage.getItem('vc_lang');
       if (savedLang) setLang(savedLang);
-
-      try {
-        // Race getSession against a 5-second timeout so a hanging token refresh never blocks startup
-        const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
-        const sessionResult = await Promise.race([sb.auth.getSession(), timeout]);
-        const session = sessionResult?.data?.session ?? null;
-        // Restore owner session if they were logged in
-        if (session) S.user = session.user;
-      } catch (_) {}
-
       go(savedLang ? renderLanding : renderLanguage);
-      initDone = true;
     }
 
     init();
