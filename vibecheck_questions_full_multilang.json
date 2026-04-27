@@ -1,0 +1,345 @@
+{
+  "social_media": [
+    {
+      "id": "social_01",
+      "question_en": "What vibe do I give online?",
+      "question_ar": "إيش الـ vibe حقي أونلاين؟",
+      "options_en": [
+        "Chill 😌",
+        "Chaotic 😂",
+        "Mysterious 👀"
+      ],
+      "options_ar": [
+        "رايق 😌",
+        "عشوائي 😂",
+        "غامض 👀"
+      ]
+    },
+    {
+      "id": "social_02",
+      "question_en": "I seem like…",
+      "question_ar": "أبين كأني…",
+      "options_en": [
+        "Social 🔥",
+        "Lowkey introvert 🌙",
+        "Depends on the mood 🎭"
+      ],
+      "options_ar": [
+        "اجتماعي 🔥",
+        "انطوائي شوي 🌙",
+        "حسب المزاج 🎭"
+      ]
+    },
+    {
+      "id": "social_03",
+      "question_en": "My content feels like I…",
+      "question_ar": "محتواي يحسسك إني…",
+      "options_en": [
+        "Just vibe ✨",
+        "Think deep 🤔",
+        "Mess around 😆"
+      ],
+      "options_ar": [
+        "بس أعيش الجو ✨",
+        "أفكر بعمق 🤔",
+        "أحب أمزح 😆"
+      ]
+    },
+    {
+      "id": "social_04",
+      "question_en": "What stands out about me online?",
+      "question_ar": "إيش أكثر شي يبان فيني أونلاين؟",
+      "options_en": [
+        "My style 😎",
+        "My thoughts 🧠",
+        "My energy ⚡"
+      ],
+      "options_ar": [
+        "ستايلـي 😎",
+        "أفكاري 🧠",
+        "طاقتي ⚡"
+      ]
+    },
+    {
+      "id": "social_05",
+      "question_en": "Do I seem approachable online?",
+      "question_ar": "هل أبين كشخص سهل أحد يكلمني أونلاين؟",
+      "options_en": [
+        "Yeah 👍",
+        "Kinda 🤏",
+        "Not really 😶"
+      ],
+      "options_ar": [
+        "إيه 👍",
+        "نوعًا ما 🤏",
+        "مو كثير 😶"
+      ]
+    },
+    {
+      "id": "social_06",
+      "question_en": "I seem like I care about…",
+      "question_ar": "أبين إني أهتم بـ…",
+      "options_en": [
+        "People ❤️",
+        "Myself 🧘",
+        "Hard to tell 🤐"
+      ],
+      "options_ar": [
+        "الناس ❤️",
+        "نفسي 🧘",
+        "مو واضح 🤐"
+      ]
+    },
+    {
+      "id": "social_07",
+      "question_en": "My online energy is:",
+      "question_ar": "طاقتي أونلاين:",
+      "options_en": [
+        "Positive 🌞",
+        "Cold ❄️",
+        "All over the place 🌪️"
+      ],
+      "options_ar": [
+        "إيجابية 🌞",
+        "باردة ❄️",
+        "متقلبة 🌪️"
+      ]
+    },
+    {
+      "id": "social_08",
+      "question_en": "What makes me different online?",
+      "question_ar": "إيش يخليني مختلف أونلاين؟",
+      "options_en": [
+        "My presence 👀",
+        "The way I talk 💬",
+        "My aesthetic 🎨"
+      ],
+      "options_ar": [
+        "حضوري 👀",
+        "طريقة كلامي 💬",
+        "الـ aesthetic حقي 🎨"
+      ]
+    },
+    {
+      "id": "social_09",
+      "question_en": "What should I improve?",
+      "question_ar": "إيش المفروض أحسّنه؟",
+      "options_en": [
+        "Be more active 🗣️",
+        "Be more clear 📢",
+        "I’m good 👍"
+      ],
+      "options_ar": [
+        "أكون أكثر تفاعل 🗣️",
+        "أكون أوضح 📢",
+        "أنا تمام 👍"
+      ]
+    },
+    {
+      "id": "social_10",
+      "question_en": "The stuff I post is:",
+      "question_ar": "الأشياء اللي أنزلها تكون:",
+      "options_en": [
+        "Real 💯",
+        "Just for fun 🎭",
+        "Random 🤷‍♂️"
+      ],
+      "options_ar": [
+        "حقيقية 💯",
+        "للمزح والوناسة 🎭",
+        "عشوائية 🤷‍♂️"
+      ]
+    }
+  ],
+  "both": [
+    {
+      "id": "both_01",
+      "question_en": "Am I different online vs real life?",
+      "question_ar": "هل أنا مختلف أونلاين عن الواقع؟",
+      "options_en": [
+        "Very 😳",
+        "A little 🤏",
+        "Same 👍"
+      ],
+      "options_ar": [
+        "كثير 😳",
+        "شوي 🤏",
+        "نفس الشي 👍"
+      ]
+    },
+    {
+      "id": "both_02",
+      "question_en": "Which version is better?",
+      "question_ar": "أي نسخة مني أفضل؟",
+      "options_en": [
+        "Online 📱",
+        "Real life 🧍",
+        "Both 🔥"
+      ],
+      "options_ar": [
+        "أونلاين 📱",
+        "في الواقع 🧍",
+        "الاثنين 🔥"
+      ]
+    },
+    {
+      "id": "both_03",
+      "question_en": "Online me is:",
+      "question_ar": "أنا أونلاين أكون:",
+      "options_en": [
+        "More confident 💥",
+        "More chill 😌",
+        "Same 🎭"
+      ],
+      "options_ar": [
+        "أكثر ثقة 💥",
+        "أكثر هدوء 😌",
+        "نفس الشي 🎭"
+      ]
+    },
+    {
+      "id": "both_04",
+      "question_en": "Real life me is:",
+      "question_ar": "أنا في الواقع أكون:",
+      "options_en": [
+        "More real 💯",
+        "More fun 😂",
+        "More deep 🤔"
+      ],
+      "options_ar": [
+        "أكثر واقعية 💯",
+        "أكثر مرح 😂",
+        "أعمق 🤔"
+      ]
+    },
+    {
+      "id": "both_05",
+      "question_en": "People online see me as:",
+      "question_ar": "الناس أونلاين يشوفوني:",
+      "options_en": [
+        "Different 🎭",
+        "Pretty accurate 👍",
+        "Not sure 🤷"
+      ],
+      "options_ar": [
+        "مختلف عن الواقع 🎭",
+        "قريب من الحقيقة 👍",
+        "مو متأكد 🤷"
+      ]
+    },
+    {
+      "id": "both_06",
+      "question_en": "Biggest difference is:",
+      "question_ar": "أكبر فرق هو:",
+      "options_en": [
+        "The way I talk 🗣️",
+        "My energy ⚡",
+        "No difference 👌"
+      ],
+      "options_ar": [
+        "طريقة كلامي 🗣️",
+        "طاقتي ⚡",
+        "مافي فرق 👌"
+      ]
+    },
+    {
+      "id": "both_07",
+      "question_en": "I am:",
+      "question_ar": "أنا أكون:",
+      "options_en": [
+        "Clear in real life",
+        "Clear online",
+        "Mysterious both 👀"
+      ],
+      "options_ar": [
+        "واضح في الواقع",
+        "واضح أونلاين",
+        "غامض في الاثنين 👀"
+      ]
+    },
+    {
+      "id": "both_08",
+      "question_en": "Something people don’t see online:",
+      "question_ar": "شي الناس ما يشوفوه أونلاين:",
+      "options_en": [
+        "My real personality 💭",
+        "My energy ⚡",
+        "Nothing really"
+      ],
+      "options_ar": [
+        "شخصيتي الحقيقية 💭",
+        "طاقتي ⚡",
+        "مافي شي مهم"
+      ]
+    },
+    {
+      "id": "both_09",
+      "question_en": "Best way to describe me:",
+      "question_ar": "أفضل وصف لي:",
+      "options_en": [
+        "Two personalities 🎭",
+        "Same person 👍",
+        "Depends 😅"
+      ],
+      "options_ar": [
+        "شخصيتين 🎭",
+        "نفس الشخص 👍",
+        "يعتمد 😅"
+      ]
+    },
+    {
+      "id": "both_10",
+      "question_en": "Most consistent thing about me:",
+      "question_ar": "أكثر شي ثابت فيني:",
+      "options_en": [
+        "My style 🧊",
+        "My energy 🔥",
+        "My mindset 🧠"
+      ],
+      "options_ar": [
+        "ستايلـي 🧊",
+        "طاقتي 🔥",
+        "تفكيري 🧠"
+      ]
+    },
+    {
+      "id": "both_11",
+      "question_en": "What should I show more?",
+      "question_ar": "إيش المفروض أظهره أكثر؟",
+      "options_en": [
+        "My real side 💯",
+        "My energy ⚡",
+        "Nothing 👍"
+      ],
+      "options_ar": [
+        "جانبي الحقيقي 💯",
+        "طاقتي ⚡",
+        "ولا شي 👍"
+      ]
+    },
+    {
+      "id": "both_12",
+      "question_en": "Final rating:",
+      "question_ar": "تقييمك النهائي:",
+      "options_en": [
+        "Elite 🔥",
+        "Normal 🙂",
+        "Needs work 😅"
+      ],
+      "options_ar": [
+        "رهيب 🔥",
+        "عادي 🙂",
+        "يحتاج شغل 😅"
+      ]
+    }
+  ],
+  "extra_feedback": {
+    "question_en": "Anything you want to add?",
+    "question_ar": "في أي شيء تحب تضيفه؟",
+    "placeholder_en": "Write your personal note if the choices weren’t enough.",
+    "placeholder_ar": "اكتب ملاحظتك الشخصية إذا الاختيارات ما كانت كافية.",
+    "type": "textarea",
+    "optional": true,
+    "max_length": 500
+  }
+}

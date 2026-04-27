@@ -1,0 +1,204 @@
+{
+  "social": [
+    {
+      "id": "social_01",
+      "question": { "en": "What vibe does Muhammad give online?", "ar": "إيش الـ vibe حق محمد أونلاين؟" },
+      "choices": [
+        { "en": "Chill 😌", "ar": "رايق 😌" },
+        { "en": "Chaotic 😂", "ar": "عشوائي 😂" },
+        { "en": "Mysterious 👀", "ar": "غامض 👀" }
+      ]
+    },
+    {
+      "id": "social_02",
+      "question": { "en": "Muhammad seems like…", "ar": "محمد يبين كأنه…" },
+      "choices": [
+        { "en": "Social 🔥", "ar": "اجتماعي 🔥" },
+        { "en": "Lowkey introvert 🌙", "ar": "انطوائي شوي 🌙" },
+        { "en": "Depends on the mood 🎭", "ar": "حسب المزاج 🎭" }
+      ]
+    },
+    {
+      "id": "social_03",
+      "question": { "en": "Muhammad's content feels like he…", "ar": "محتوى محمد يحسسك إنه…" },
+      "choices": [
+        { "en": "Just vibes ✨", "ar": "بس يعيش الجو ✨" },
+        { "en": "Thinks deep 🤔", "ar": "يفكر بعمق 🤔" },
+        { "en": "Messes around 😆", "ar": "يحب يمزح 😆" }
+      ]
+    },
+    {
+      "id": "social_04",
+      "question": { "en": "What stands out about Muhammad online?", "ar": "إيش أكثر شي يبان في محمد أونلاين؟" },
+      "choices": [
+        { "en": "His style 😎", "ar": "ستايله 😎" },
+        { "en": "His thoughts 🧠", "ar": "أفكاره 🧠" },
+        { "en": "His energy ⚡", "ar": "طاقته ⚡" }
+      ]
+    },
+    {
+      "id": "social_05",
+      "question": { "en": "Does Muhammad seem approachable online?", "ar": "هل محمد يبين كشخص سهل تكلمه أونلاين؟" },
+      "choices": [
+        { "en": "Yeah 👍", "ar": "إيه 👍" },
+        { "en": "Kinda 🤏", "ar": "نوعًا ما 🤏" },
+        { "en": "Not really 😶", "ar": "مو كثير 😶" }
+      ]
+    },
+    {
+      "id": "social_06",
+      "question": { "en": "Muhammad seems like he cares about…", "ar": "محمد يبين إنه يهتم بـ…" },
+      "choices": [
+        { "en": "People ❤️", "ar": "الناس ❤️" },
+        { "en": "Himself 🧘", "ar": "نفسه 🧘" },
+        { "en": "Hard to tell 🤐", "ar": "مو واضح 🤐" }
+      ]
+    },
+    {
+      "id": "social_07",
+      "question": { "en": "Muhammad's online energy is:", "ar": "طاقة محمد أونلاين:" },
+      "choices": [
+        { "en": "Positive 🌞", "ar": "إيجابية 🌞" },
+        { "en": "Cold ❄️", "ar": "باردة ❄️" },
+        { "en": "All over the place 🌪️", "ar": "متقلبة 🌪️" }
+      ]
+    },
+    {
+      "id": "social_08",
+      "question": { "en": "What makes Muhammad different online?", "ar": "إيش يخلي محمد مختلف أونلاين؟" },
+      "choices": [
+        { "en": "His presence 👀", "ar": "حضوره 👀" },
+        { "en": "The way he talks 💬", "ar": "طريقة كلامه 💬" },
+        { "en": "His aesthetic 🎨", "ar": "الـ aesthetic حقه 🎨" }
+      ]
+    },
+    {
+      "id": "social_09",
+      "question": { "en": "What should Muhammad improve?", "ar": "إيش المفروض محمد يحسّنه؟" },
+      "choices": [
+        { "en": "Be more active 🗣️", "ar": "يكون أكثر تفاعل 🗣️" },
+        { "en": "Be more clear 📢", "ar": "يكون أوضح 📢" },
+        { "en": "He's good 👍", "ar": "هو تمام 👍" }
+      ]
+    },
+    {
+      "id": "social_10",
+      "question": { "en": "The stuff Muhammad posts is:", "ar": "الأشياء اللي محمد ينزلها تكون:" },
+      "choices": [
+        { "en": "Real 💯", "ar": "حقيقية 💯" },
+        { "en": "Just for fun 🎭", "ar": "للمزح والوناسة 🎭" },
+        { "en": "Random 🤷‍♂️", "ar": "عشوائية 🤷‍♂️" }
+      ]
+    }
+  ],
+  "both": [
+    {
+      "id": "both_01",
+      "question": { "en": "Is Muhammad different online vs real life?", "ar": "هل محمد مختلف أونلاين عن الواقع؟" },
+      "choices": [
+        { "en": "Very 😳", "ar": "كثير 😳" },
+        { "en": "A little 🤏", "ar": "شوي 🤏" },
+        { "en": "Same 👍", "ar": "نفس الشي 👍" }
+      ]
+    },
+    {
+      "id": "both_02",
+      "question": { "en": "Which version of Muhammad is better?", "ar": "أي نسخة من محمد أفضل؟" },
+      "choices": [
+        { "en": "Online 📱", "ar": "أونلاين 📱" },
+        { "en": "Real life 🧍", "ar": "في الواقع 🧍" },
+        { "en": "Both 🔥", "ar": "الاثنين 🔥" }
+      ]
+    },
+    {
+      "id": "both_03",
+      "question": { "en": "Online Muhammad is:", "ar": "محمد أونلاين يكون:" },
+      "choices": [
+        { "en": "More confident 💥", "ar": "أكثر ثقة 💥" },
+        { "en": "More chill 😌", "ar": "أكثر هدوء 😌" },
+        { "en": "Same 🎭", "ar": "نفس الشي 🎭" }
+      ]
+    },
+    {
+      "id": "both_04",
+      "question": { "en": "Real life Muhammad is:", "ar": "محمد في الواقع يكون:" },
+      "choices": [
+        { "en": "More real 💯", "ar": "أكثر واقعية 💯" },
+        { "en": "More fun 😂", "ar": "أكثر مرح 😂" },
+        { "en": "More deep 🤔", "ar": "أعمق 🤔" }
+      ]
+    },
+    {
+      "id": "both_05",
+      "question": { "en": "People online see Muhammad as:", "ar": "الناس أونلاين يشوفون محمد:" },
+      "choices": [
+        { "en": "Different 🎭", "ar": "مختلف عن الواقع 🎭" },
+        { "en": "Pretty accurate 👍", "ar": "قريب من الحقيقة 👍" },
+        { "en": "Not sure 🤷", "ar": "مو متأكد 🤷" }
+      ]
+    },
+    {
+      "id": "both_06",
+      "question": { "en": "Muhammad's biggest difference is:", "ar": "أكبر فرق في محمد هو:" },
+      "choices": [
+        { "en": "The way he talks 🗣️", "ar": "طريقة كلامه 🗣️" },
+        { "en": "His energy ⚡", "ar": "طاقته ⚡" },
+        { "en": "No difference 👌", "ar": "مافي فرق 👌" }
+      ]
+    },
+    {
+      "id": "both_07",
+      "question": { "en": "Muhammad is:", "ar": "محمد يكون:" },
+      "choices": [
+        { "en": "Clear in real life", "ar": "واضح في الواقع" },
+        { "en": "Clear online", "ar": "واضح أونلاين" },
+        { "en": "Mysterious both 👀", "ar": "غامض في الاثنين 👀" }
+      ]
+    },
+    {
+      "id": "both_08",
+      "question": { "en": "Something people don't see about Muhammad online:", "ar": "شي الناس ما يشوفونه في محمد أونلاين:" },
+      "choices": [
+        { "en": "His real personality 💭", "ar": "شخصيته الحقيقية 💭" },
+        { "en": "His energy ⚡", "ar": "طاقته ⚡" },
+        { "en": "Nothing really", "ar": "مافي شي مهم" }
+      ]
+    },
+    {
+      "id": "both_09",
+      "question": { "en": "Best way to describe Muhammad:", "ar": "أفضل وصف لمحمد:" },
+      "choices": [
+        { "en": "Two personalities 🎭", "ar": "شخصيتين 🎭" },
+        { "en": "Same person 👍", "ar": "نفس الشخص 👍" },
+        { "en": "Depends 😅", "ar": "يعتمد 😅" }
+      ]
+    },
+    {
+      "id": "both_10",
+      "question": { "en": "Most consistent thing about Muhammad:", "ar": "أكثر شي ثابت في محمد:" },
+      "choices": [
+        { "en": "His style 🧊", "ar": "ستايله 🧊" },
+        { "en": "His energy 🔥", "ar": "طاقته 🔥" },
+        { "en": "His mindset 🧠", "ar": "تفكيره 🧠" }
+      ]
+    },
+    {
+      "id": "both_11",
+      "question": { "en": "What should Muhammad show more?", "ar": "إيش المفروض محمد يظهره أكثر؟" },
+      "choices": [
+        { "en": "His real side 💯", "ar": "جانبه الحقيقي 💯" },
+        { "en": "His energy ⚡", "ar": "طاقته ⚡" },
+        { "en": "Nothing 👍", "ar": "ولا شي 👍" }
+      ]
+    },
+    {
+      "id": "both_12",
+      "question": { "en": "Final rating for Muhammad:", "ar": "تقييمك النهائي لمحمد:" },
+      "choices": [
+        { "en": "Elite 🔥", "ar": "رهيب 🔥" },
+        { "en": "Normal 🙂", "ar": "عادي 🙂" },
+        { "en": "Needs work 😅", "ar": "يحتاج شغل 😅" }
+      ]
+    }
+  ]
+}

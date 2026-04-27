@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Secrets
+.env
+.env.*
+credentials.json
+token.json
+
+# Intermediate / temp
+.tmp/
+font-extracted/
+
+# Large source assets (regeneratable)
+vibe.pdf
+masking-renta-font.zip
+
+# Stray editor / system files
+.DS_Store
+Thumbs.db
+*.log
+
+# Stray duplicates in this directory
+CLAUDE (5).md
+SKILL less.md

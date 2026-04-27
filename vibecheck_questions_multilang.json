@@ -1,0 +1,62 @@
+{
+  "social_media": [
+    {
+      "question_en": "What kind of vibe do I give online?",
+      "question_ar": "أي نوع من الـ vibe أعطيه أونلاين؟",
+      "options_en": [
+        "Calm and relaxed",
+        "Fun and random",
+        "A bit mysterious"
+      ],
+      "options_ar": [
+        "هادي ومرتاح",
+        "مرح وعشوائي",
+        "غامض شوي"
+      ]
+    },
+    {
+      "question_en": "I seem like someone who is…",
+      "question_ar": "أبين كشخص…",
+      "options_en": [
+        "Social and outgoing",
+        "More introverted",
+        "Depends on the situation"
+      ],
+      "options_ar": [
+        "اجتماعي",
+        "انطوائي أكثر",
+        "حسب الموقف"
+      ]
+    }
+  ],
+  "both": [
+    {
+      "question_en": "Am I different online compared to real life?",
+      "question_ar": "هل أنا مختلف أونلاين عن الواقع؟",
+      "options_en": [
+        "Very different",
+        "Slightly different",
+        "Mostly the same"
+      ],
+      "options_ar": [
+        "مختلف كثير",
+        "مختلف شوي",
+        "تقريباً نفس الشي"
+      ]
+    },
+    {
+      "question_en": "Which version of me feels better?",
+      "question_ar": "أي نسخة مني أفضل؟",
+      "options_en": [
+        "Online",
+        "Real life",
+        "Both equally"
+      ],
+      "options_ar": [
+        "أونلاين",
+        "في الواقع",
+        "الاثنين"
+      ]
+    }
+  ]
+}
