@@ -768,17 +768,20 @@
       }
 
       try {
-        const { data: resp, error: re } = await sb.from('responses').insert({
+        const newId = crypto.randomUUID();
+
+        const { error: re } = await sb.from('responses').insert({
+          id: newId,
           respondent_name:  S.respondentName  || null,
           respondent_email: S.respondentEmail || null,
           relationship_type: S.rel,
           additional_text: S.additionalText || null,
-        }).select().single();
+        });
 
         if (re) { showSubmitError(re.message || t('errGeneric')); return; }
 
         const ansRows = S.answers.map(a => ({
-          response_id: resp.id,
+          response_id: newId,
           question_id: a.questionId,
           choice_index: a.choiceIndex,
           custom_answer: a.otherText || null,
